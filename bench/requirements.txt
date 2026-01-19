@@ -4,5 +4,4 @@ blosc2-grok
 hdf5plugin
 scikit-image
 tqdm
-jupyter
 matplotlib

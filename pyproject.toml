@@ -39,7 +39,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-h5py-test = [
+test = [
     "pytest",  # to run tests
 ]
 
@@ -54,8 +54,6 @@ zip-safe = false
 [tool.cibuildwheel]
 skip = "*-manylinux_i686 *_ppc64le *_s390x *-musllinux*"
 # Build using the manylinux image to ensure manylinux_2_28 wheels are produced
-# grok needs at least GCC 11, and manylinux_2_28 is the first manylinux image
-# to include GCC 11 (actually, GCC 12)
 manylinux-x86_64-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
 

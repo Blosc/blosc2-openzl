@@ -7,12 +7,32 @@ include(FetchContent)
 # ============================================================
 # Step 1: Find C-Blosc2
 # ============================================================
-# Assume C-Blosc2 is installed in $HOME/.local
-list(APPEND CMAKE_PREFIX_PATH "$ENV{HOME}/.local")
-find_package(Blosc2 REQUIRED)
+# Find blosc2.h
+find_package(Python COMPONENTS Interpreter NumPy Development.Module REQUIRED)
+if (UNIX)
+    cmake_path(SET Python_ROOT NORMALIZE "${Python_NumPy_INCLUDE_DIRS}/../../..")
+else()
+    cmake_path(SET Python_ROOT NORMALIZE "${Python_NumPy_INCLUDE_DIRS}/../../..")
+endif()
+cmake_path(SET Python_INCLUDE NORMALIZE "${Python_ROOT}/include")
+message(STATUS "Found Python include: ${Python_ROOT}")
+cmake_path(SET Python_LIB NORMALIZE "${Python_ROOT}/lib")
+cmake_path(SET Python_LIB64 NORMALIZE "${Python_ROOT}/lib64")
+cmake_path(SET Python_Blosc2_INCLUDE NORMALIZE "${Python_ROOT}/include/blosc2.h")
+cmake_path(HAS_FILENAME Python_Blosc2_INCLUDE HAS_BLOSC2)
+if(HAS_BLOSC2)
+    set(BLOSC2_INCLUDE_DIR ${Python_INCLUDE})
+    message(STATUS "Found Blosc2 include: ${Python_Blosc2_INCLUDE}")
+else()
+    message(FATAL_ERROR "No Blosc2 includes found.  Aborting.")
+endif()
 
-message(STATUS "Found Blosc2 include dirs: ${Blosc2_INCLUDE_DIRS}")
-message(STATUS "Found Blosc2 libraries: ${Blosc2_LIBRARIES}")
+include_directories("${BLOSC2_INCLUDE_DIR}")
+# Link actual blosc2 binaries
+link_directories(${Python_LIB})
+if (UNIX AND NOT APPLE)
+    link_directories(${Python_LIB64})
+endif (UNIX AND NOT APPLE)
 
 # ============================================================
 # Step 2: Fetch OpenZL (C-only)
@@ -43,26 +63,5 @@ endif()
 # ============================================================
 # Step 3: blosc2_openzl plugin
 # ============================================================
-
-add_library(blosc2_openzl SHARED
-    src/blosc2_openzl.c
-)
-
-target_include_directories(blosc2_openzl
-    PRIVATE
-        ${Blosc2_INCLUDE_DIRS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
-
-target_link_libraries(blosc2_openzl
-    PRIVATE
-        Blosc2::blosc2
-        ${OPENZL_TARGET}
-)
-
-# Ensure symbols from blosc2_openzl_public.h are exported
-if(UNIX AND NOT APPLE)
-    target_compile_options(blosc2_openzl PRIVATE -fvisibility=hidden)
-endif()
 
 add_subdirectory(src)
