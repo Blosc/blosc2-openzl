@@ -52,14 +52,6 @@ One may set the OpenZL graph using `codec_meta`, an 8-bit integer corresponding 
 
 The remaining bits may be used in the future.
 
-
-## Notes
-When using `blosc2_openzl`, there are some restrictions that you have
-to keep in mind.
-
-## More examples
-See the [examples](examples/) directory for more examples.
-
 ## Thanks
 
 Thanks to Luke Shaw, Marta Iborra, J. David Ibáñez and Francesc Alted from the Blosc Development Team, for making this plugin possible. Thanks also to the OpenZL team for authoring of the [OpenZL library](https://github.com/facebook/openzl).
