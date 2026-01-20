@@ -2,7 +2,7 @@
 
 A dynamic codec plugin for Blosc2 that allows one to compress
 and decompress data using the OpenZL compression library. For details, check out the
-[project README](https://github.com/facebook/openzl). With this plugin, you can use it as yet another codec in applications using Blosc2.  See an example of use at: https://github.com/Blosc/blosc2-openzl/blob/main/examples/params.py
+[project README](https://github.com/facebook/openzl). With this plugin, you can use it as yet another codec in applications using Blosc2.  See an example of use at: https://github.com/Blosc/blosc2-openzl/blob/main/tests/test_meta.py
 
 ## Installation
 
