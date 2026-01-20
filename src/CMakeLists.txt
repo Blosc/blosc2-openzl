@@ -1,3 +1,4 @@
+# Build C extension for blosc2_openzl
 add_library(blosc2_openzl SHARED
     blosc2_openzl.c
 )

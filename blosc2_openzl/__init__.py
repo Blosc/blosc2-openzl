@@ -1,7 +1,7 @@
-##############################################################################
-# blosc2_grok: Grok (JPEG2000 codec) plugin for Blosc2
+############################################################################## 
+# blosc2_openzl: OpenZL plugin for Blosc2
 #
-# Copyright (c) 2023  The Blosc Development Team <blosc@blosc.org>
+# Copyright (c) 2026  The Blosc Development Team <blosc@blosc.org>
 # https://blosc.org
 # License: GNU Affero General Public License v3.0 (see LICENSE.txt)
 ##############################################################################
@@ -49,7 +49,7 @@ def get_libpath():
         libname = "blosc2_openzl.dll"
     else:
         raise RuntimeError("Unsupported system: ", system)
-    return os.path.abspath(Path(__file__).parent / libname)
+    return os.path.abspath("/home/lshaw/miniconda3/envs/blosc2env/lib/python3.13/site-packages/blosc2_openzl/libblosc2_openzl.so")
 
 
 libpath = get_libpath()

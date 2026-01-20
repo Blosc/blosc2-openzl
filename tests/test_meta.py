@@ -17,15 +17,15 @@ N_ITEMS = 1000
 
 project_dir = Path(__file__).parent.parent
 @pytest.mark.parametrize('meta', test_list)
-@pytest.mark.parametrize(('shapes', 'chunks'), [((N_ITEMS, N_ITEMS), (N_ITEMS // 10, N_ITEMS // 6)), ((N_ITEMS, ), (N_ITEMS // 6))])
+@pytest.mark.parametrize(('shape', 'chunks'), [((N_ITEMS, N_ITEMS), (N_ITEMS // 10, N_ITEMS // 6)), ((N_ITEMS, ), (N_ITEMS // 6,))])
 def test_meta(meta, shape, chunks):
     # Convert the image to a numpy array
-    np_array = np.arange(N_ITEMS).shape
+    np_array = np.arange(np.prod(shape)).reshape(shape)
 
     # Set the parameters that will be used by the codec
     cparams = {
         'codec': blosc2.Codec.OPENZL,
-        'codec_meta': meta,
+        'codec_meta': meta.value,
         'filters': [],
     }
 

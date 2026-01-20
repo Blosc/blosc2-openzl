@@ -28,7 +28,6 @@ else()
 endif()
 
 include_directories("${BLOSC2_INCLUDE_DIR}")
-# Link actual blosc2 binaries
 link_directories(${Python_LIB})
 if (UNIX AND NOT APPLE)
     link_directories(${Python_LIB64})
