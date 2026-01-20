@@ -19,9 +19,6 @@ import blosc2
 import numpy as np
 import blosc2_openzl
 
-# Set the params for the OpenZL codec
-# TODO
-
 # Define the compression and decompression parameters for Blosc2.
 cparams = {
     'codec': blosc2.Codec.OPENZL,
@@ -29,20 +26,14 @@ cparams = {
     'codec_meta': 7,
 }
 
-# Read the image
-im = Image.open("examples/kodim23.png")
-# Convert the image to a numpy array
-np_array = np.asarray(im)
+# Create array to be compressed
+np_array = np.arange(1000).reshape((10,100))
 
 # Transform the numpy array to a blosc2 array. This is where compression happens, and
 # the OpenZL codec is called.
 bl_array = blosc2.asarray(
     np_array,
-    chunks=np_array.shape,
-    blocks=np_array.shape,
-    cparams=cparams,
-    urlpath="examples/kodim23.b2nd",
-    mode="w",
+    cparams=cparams
 )
 
 # Print information about the array, see the compression ratio (cratio)
