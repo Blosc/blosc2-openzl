@@ -15,12 +15,6 @@ add_library(blosc2_openzl SHARED
     blosc2_openzl.c
 )
 
-target_include_directories(blosc2_openzl
-    PRIVATE
-        ${BLOSC2_INCLUDE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
 target_link_libraries(blosc2_openzl
     PRIVATE
         ${BLOSC2_LIBRARIES}

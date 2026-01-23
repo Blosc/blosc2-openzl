@@ -13,6 +13,10 @@ include(GNUInstallDirs)
 include(FetchContent)
 
 message("Building Blosc2 plugin...")
+
+# The following two steps are necessary when calling via cmake
+find_package(Python REQUIRED COMPONENTS Interpreter) 
+
 # Propagate CMAKE_OSX_ARCHITECTURES env variable into CMAKE_SYSTEM_PROCESSOR
 if(DEFINED ENV{CMAKE_OSX_ARCHITECTURES})
     if("$ENV{CMAKE_OSX_ARCHITECTURES}" STREQUAL "arm64")
@@ -94,5 +98,5 @@ endif()
 # ============================================================
 # Step 3: blosc2_openzl plugin
 # ============================================================
-
+include_directories("${BLOSC2_INCLUDE_DIR}")
 add_subdirectory(src)
