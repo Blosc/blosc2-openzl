@@ -37,12 +37,10 @@ endif()
 set(_blosc2_runtime_rpaths "")
 if(APPLE)
     list(APPEND _blosc2_runtime_rpaths
-        "@loader_path"
         "@loader_path/../blosc2/lib"
     )
 elseif(UNIX)
     list(APPEND _blosc2_runtime_rpaths
-        "$ORIGIN"
         "$ORIGIN/../blosc2/lib"
     )
 endif()
@@ -60,7 +58,6 @@ install(TARGETS blosc2_openzl
     LIBRARY DESTINATION blosc2_openzl
 )
 
-unset(_blosc2_runtime_rpaths)
 # ============================================================
 # Step 4: Executables
 # ============================================================

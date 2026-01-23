@@ -1,1 +1,2 @@
 pytest
+blosc2>=4.0.0b1
