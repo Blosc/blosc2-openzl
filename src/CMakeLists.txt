@@ -6,27 +6,41 @@
 # License: GNU Affero General Public License v3.0 (see LICENSE.txt)
 ##############################################################################
 
-# Build statically
-set(BUILD_SHARED_LIBS OFF)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# ============================================================
+# Step 2: Fetch OpenZL (C-only)
+# ============================================================
+# Disable everything non-C
+set(OPENZL_BUILD_PYTHON_EXT OFF CACHE BOOL "" FORCE)
+set(OPENZL_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(OPENZL_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(OPENZL_INSTALL OFF CACHE BOOL "" FORCE)
+set(OPENZL_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    openzl
+    GIT_REPOSITORY https://github.com/facebook/openzl.git
+    GIT_TAG 4010c5f047441756092b039dcc8cfe7565a91d85 # pin exact version
+)
+FetchContent_MakeAvailable(openzl)
+
+# OpenZL target resolution
+if(TARGET OpenZL::openzl)
+    set(OPENZL_TARGET OpenZL::openzl)
+elseif(TARGET openzl)
+    set(OPENZL_TARGET openzl)
+else()
+    message(FATAL_ERROR "OpenZL target not found")
+endif()
+
 
 # Build C extension for blosc2_openzl
 add_library(blosc2_openzl SHARED
     blosc2_openzl.c
 )
 
-target_link_libraries(blosc2_openzl
-    PRIVATE
-        ${BLOSC2_LIBRARIES}
-        ${OPENZL_TARGET}
-)
-
-# Set RPATH for locating libblosc2 at runtime
-if(DEFINED BLOSC2_LIBRARY_DIR_RESOLVED)
-    set_target_properties(blosc2_openzl PROPERTIES
-        BUILD_RPATH "${BLOSC2_LIBRARY_DIR_RESOLVED}"
-    )
-endif()
+include_directories("${BLOSC2_INCLUDE_DIR}")
+target_link_libraries(blosc2_openzl ${OPENZL_TARGET})
 
 set(_blosc2_runtime_rpaths "")
 if(APPLE)

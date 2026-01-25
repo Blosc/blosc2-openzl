@@ -49,7 +49,7 @@ def get_libpath():
         libname = "blosc2_openzl.dll"
     else:
         raise RuntimeError("Unsupported system: ", system)
-    return os.path.abspath("/home/lshaw/miniconda3/envs/blosc2env/lib/python3.13/site-packages/blosc2_openzl/libblosc2_openzl.so")
+    return os.path.abspath(Path(__file__).parent / libname)
 
 
 libpath = get_libpath()

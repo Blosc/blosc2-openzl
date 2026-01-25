@@ -9,6 +9,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(blosc2_openzl LANGUAGES C)
 
+# Build statically
+set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_FIND_FRAMEWORK NEVER)
+
 include(GNUInstallDirs)
 include(FetchContent)
 
@@ -70,33 +75,6 @@ else()
 endif()
 
 # ============================================================
-# Step 2: Fetch OpenZL (C-only)
-# ============================================================
-# Disable everything non-C
-set(OPENZL_BUILD_PYTHON_EXT OFF CACHE BOOL "" FORCE)
-set(OPENZL_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(OPENZL_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(OPENZL_INSTALL OFF CACHE BOOL "" FORCE)
-set(OPENZL_BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
-
-FetchContent_Declare(
-    openzl
-    GIT_REPOSITORY https://github.com/facebook/openzl.git
-    GIT_TAG 4010c5f047441756092b039dcc8cfe7565a91d85 # pin exact version
-)
-FetchContent_MakeAvailable(openzl)
-
-# OpenZL target resolution
-if(TARGET OpenZL::openzl)
-    set(OPENZL_TARGET OpenZL::openzl)
-elseif(TARGET openzl)
-    set(OPENZL_TARGET openzl)
-else()
-    message(FATAL_ERROR "OpenZL target not found")
-endif()
-
-# ============================================================
 # Step 3: blosc2_openzl plugin
 # ============================================================
-include_directories("${BLOSC2_INCLUDE_DIR}")
 add_subdirectory(src)
