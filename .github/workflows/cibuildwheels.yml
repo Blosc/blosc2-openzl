@@ -175,6 +175,11 @@ jobs:
         env:
           CIBW_BEFORE_ALL: python -m pip install -r requirements-build.txt
           CIBW_BUILD: 'cp312-win_amd64'
+          # OpenZL doesn't like MSVC
+          CIBW_ENVIRONMENT_WINDOWS: >-
+            CMAKE_GENERATOR=Ninja
+            CC=clang-cl
+            CXX=clang-cl
           # Windows tests are currently disabled (wheel is built but not tested).
           # Uncomment the lines below to re-enable Windows tests.
           CIBW_BEFORE_TEST: python -m pip install --upgrade pip && python -m pip install -r requirements-test.txt
