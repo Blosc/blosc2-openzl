@@ -43,8 +43,10 @@ class OpenZLProfile(Enum):
 
 def get_libpath():
     system = platform.system()
-    if system in ["Linux", "Darwin"]:
+    if system in "Linux":
         libname = "libblosc2_openzl.so"
+    elif system == "Darwin":
+        libname = "libblosc2_openzl.dylib"
     elif system == "Windows":
         libname = "blosc2_openzl.dll"
     else:
