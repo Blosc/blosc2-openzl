@@ -15,7 +15,7 @@ set(OPENZL_BUILD_PYTHON_EXT OFF CACHE BOOL "" FORCE)
 set(OPENZL_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(OPENZL_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(OPENZL_INSTALL OFF CACHE BOOL "" FORCE)
-set(OPENZL_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(OPENZL_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE) # build statically
 
 FetchContent_Declare(
     openzl
@@ -34,31 +34,27 @@ else()
 endif()
 
 
-# Build C extension for blosc2_openzl
-add_library(blosc2_openzl SHARED
-    blosc2_openzl.c
-)
+# ============================================================
+# Step 3: Build C extension for blosc2_openzl
+# ============================================================
+add_library(blosc2_openzl SHARED blosc2_openzl.c)
+target_include_directories(blosc2_openzl PUBLIC ${BLOSC2_INCLUDE_DIR})
+# link to openzl (not to blosc2, since blosc2_openzl always called via blosc2 as plugin)
+target_link_libraries(blosc2_openzl ${OPENZL_TARGET}) 
 
-include_directories("${BLOSC2_INCLUDE_DIR}")
-target_link_libraries(blosc2_openzl ${OPENZL_TARGET})
-
-set(_blosc2_runtime_rpaths "")
-if(APPLE)
-    list(APPEND _blosc2_runtime_rpaths
-        "@loader_path/../blosc2/lib"
-    )
-elseif(UNIX)
-    list(APPEND _blosc2_runtime_rpaths
-        "$ORIGIN/../blosc2/lib"
-    )
-endif()
-
-if(_blosc2_runtime_rpaths)
+# Add runtime path just in case (e.g. load plugin before blosc2 for example)
+# will not always be used, but if can't find blosc2 gives another thing to check
+# before failing
+if(UNIX AND NOT APPLE)
     set_target_properties(blosc2_openzl PROPERTIES
-        INSTALL_RPATH "${_blosc2_runtime_rpaths}"
+        INSTALL_RPATH "$ORIGIN/../blosc2/lib"
+    )
+elseif(APPLE)
+    set_target_properties(blosc2_openzl PROPERTIES
+        INSTALL_RPATH "@loader_path/../blosc2/lib"
     )
 endif()
-unset(_blosc2_runtime_rpaths)
+
 
 # Install
 install(TARGETS blosc2_openzl
@@ -72,6 +68,7 @@ install(TARGETS blosc2_openzl
 if(NOT DEFINED ENV{DONT_BUILD_EXAMPLES})
     message(STATUS "DONT_BUILD_EXAMPLES not set-> Building examples")
     add_executable(test_openzl test_openzl.c)
+    target_include_directories(test_openzl PRIVATE ${BLOSC2_INCLUDE_DIR})
     if(MSVC OR MINGW)
         target_link_libraries(test_openzl ${BLOSC2_LIBRARIES} ${OPENZL_TARGET})
     else()

@@ -9,8 +9,6 @@
 cmake_minimum_required(VERSION 3.20)
 project(blosc2_openzl LANGUAGES C)
 
-# Build statically
-set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_FIND_FRAMEWORK NEVER)
 
@@ -19,7 +17,7 @@ include(FetchContent)
 
 message("Building Blosc2 plugin...")
 
-# The following two steps are necessary when calling via cmake
+# Necessary when calling via cmake (to know which python to call)
 find_package(Python REQUIRED COMPONENTS Interpreter) 
 
 # Propagate CMAKE_OSX_ARCHITECTURES env variable into CMAKE_SYSTEM_PROCESSOR
@@ -28,10 +26,10 @@ if(DEFINED ENV{CMAKE_OSX_ARCHITECTURES})
         set(CMAKE_SYSTEM_PROCESSOR arm64)
     endif()
 endif()
+
 # ============================================================
 # Step 1: Find C-Blosc2
 # ============================================================
-
 # Find blosc2 package location using Python
 execute_process(
     COMMAND "${Python_EXECUTABLE}" -c "import blosc2, pathlib; print(pathlib.Path(blosc2.__file__).parent)"
@@ -40,6 +38,7 @@ execute_process(
     RESULT_VARIABLE BLOSC2_IMPORT_RESULT
 )
 
+# To compile blosc2_openzl, we only need the include files
 if(BLOSC2_IMPORT_RESULT EQUAL 0 AND EXISTS "${BLOSC2_PACKAGE_DIR}")
     message(STATUS "Found blosc2 package at: ${BLOSC2_PACKAGE_DIR}")
 
@@ -50,31 +49,32 @@ if(BLOSC2_IMPORT_RESULT EQUAL 0 AND EXISTS "${BLOSC2_PACKAGE_DIR}")
     else()
         message(STATUS "Found Blosc2 include: ${BLOSC2_INCLUDE_DIR}/blosc2.h")
     endif()
-
-    # Try only PEP 427 compliant structure (blosc2/lib/)
-    set(BLOSC2_LIB_DIR "${BLOSC2_PACKAGE_DIR}/lib")
-    if(NOT EXISTS "${BLOSC2_LIB_DIR}")
-        message(FATAL_ERROR "blosc2 lib dir not found. Tried:\n  ${BLOSC2_PACKAGE_DIR}/lib")
-    endif()
-
-    find_library(BLOSC2_LIBRARY
-        NAMES blosc2 libblosc2
-        PATHS "${BLOSC2_LIB_DIR}"
-        NO_DEFAULT_PATH
-    )
-
-    if(BLOSC2_LIBRARY)
-        message(STATUS "Found Blosc2 library: ${BLOSC2_LIBRARY}")
-        set(BLOSC2_LIBRARIES "${BLOSC2_LIBRARY}")
-        get_filename_component(BLOSC2_LIBRARY_DIR_RESOLVED "${BLOSC2_LIBRARY}" DIRECTORY)
-    else()
-        message(FATAL_ERROR "Blosc2 library not found in ${BLOSC2_LIB_DIR}. Please install the blosc2 Python package with bundled libraries.")
-    endif()
 else()
     message(FATAL_ERROR "Could not import blosc2 package. Please install it first: pip install blosc2")
 endif()
 
+# For the test_openzl executable, we also need the actual blosc2 lib
+# Try only PEP 427 compliant structure (blosc2/lib/)
+set(BLOSC2_LIB_DIR "${BLOSC2_PACKAGE_DIR}/lib")
+if(NOT EXISTS "${BLOSC2_LIB_DIR}")
+    message(FATAL_ERROR "blosc2 lib dir not found. Tried:\n  ${BLOSC2_PACKAGE_DIR}/lib")
+endif()
+
+find_library(BLOSC2_LIBRARY
+    NAMES blosc2 libblosc2
+    PATHS "${BLOSC2_LIB_DIR}"
+    NO_DEFAULT_PATH
+)
+
+if(BLOSC2_LIBRARY)
+    message(STATUS "Found Blosc2 library: ${BLOSC2_LIBRARY}")
+    set(BLOSC2_LIBRARIES "${BLOSC2_LIBRARY}")
+    get_filename_component(BLOSC2_LIBRARY_DIR_RESOLVED "${BLOSC2_LIBRARY}" DIRECTORY)
+else()
+    message(FATAL_ERROR "Blosc2 library not found in ${BLOSC2_LIB_DIR}. Please install the blosc2 Python package with bundled libraries.")
+endif()
+
 # ============================================================
-# Step 3: blosc2_openzl plugin
+# blosc2_openzl plugin source files
 # ============================================================
 add_subdirectory(src)
