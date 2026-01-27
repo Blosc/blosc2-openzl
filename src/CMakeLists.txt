@@ -24,6 +24,7 @@
 # set(OPENZL_BUILD_CPP ON CACHE BOOL "" FORCE)
 # set(OPENZL_BUILD_CUSTOM_PARSERS OFF CACHE BOOL "" FORCE)
 # set(OPENZL_BUILD_TOOLS OFF CACHE BOOL "" FORCE) # <- even when set to OFF, still builds tools dir, which requires cpp
+# and this builds XGBOOST, which is problematic on windows
 # set(OPENZL_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 # set(OPENZL_BUILD_CLI OFF CACHE BOOL "" FORCE)
 
