@@ -7,7 +7,7 @@
 ##############################################################################
 
 cmake_minimum_required(VERSION 3.20)
-project(blosc2_openzl LANGUAGES C)
+project(blosc2_openzl LANGUAGES C CXX) # enable CXX just to get openzl to compile
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_FIND_FRAMEWORK NEVER)
