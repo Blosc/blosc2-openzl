@@ -16,11 +16,12 @@ test_list = list(OpenZLProfile)
 N_ITEMS = 1000
 
 project_dir = Path(__file__).parent.parent
+@pytest.mark.parametrize('dtype', (np.int64, np.float32, np.float64, np.int32, np.uint32))
 @pytest.mark.parametrize('meta', test_list)
 @pytest.mark.parametrize(('shape', 'chunks'), [((N_ITEMS, N_ITEMS), (N_ITEMS // 10, N_ITEMS // 6)), ((N_ITEMS, ), (N_ITEMS // 6,))])
-def test_meta(meta, shape, chunks):
+def test_meta(dtype, meta, shape, chunks):
     # Convert the image to a numpy array
-    np_array = np.arange(np.prod(shape)).reshape(shape)
+    np_array = np.arange(np.prod(shape), dtype=dtype).reshape(shape)
 
     # Set the parameters that will be used by the codec
     cparams = {
@@ -37,3 +38,4 @@ def test_meta(meta, shape, chunks):
 
     assert bl_array.cratio > 1
     assert bl_array.chunks == chunks
+    np.testing.assert_allclose(np_array, bl_array[:])

@@ -43,13 +43,16 @@ class OpenZLProfile(Enum):
 
 def get_libpath():
     system = platform.system()
-    if system in ["Linux", "Darwin"]:
+    if system in "Linux":
         libname = "libblosc2_openzl.so"
+    elif system == "Darwin":
+        # in future, on macOS may compile to .os (e.g. if blosc2 funcs added to blosc2_openzl.c)
+        libname = "libblosc2_openzl.dylib"
     elif system == "Windows":
         libname = "blosc2_openzl.dll"
     else:
         raise RuntimeError("Unsupported system: ", system)
-    return os.path.abspath("/home/lshaw/miniconda3/envs/blosc2env/lib/python3.13/site-packages/blosc2_openzl/libblosc2_openzl.so")
+    return os.path.abspath(Path(__file__).parent / libname)
 
 
 libpath = get_libpath()

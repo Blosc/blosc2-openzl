@@ -1,5 +1,5 @@
 ############################################################################## 
-# blosc2_openzl: OpenZL plugin for Blosc2
+# blosc2-openzl: OpenZL plugin for Blosc2
 #
 # Copyright (c) 2026  The Blosc Development Team <blosc@blosc.org>
 # https://blosc.org
@@ -7,7 +7,7 @@
 ##############################################################################
 
 [build-system]
-requires = ["scikit-build-core", "blosc2"]
+requires = ["scikit-build-core", "blosc2>=4.0.0.b1"]
 build-backend = "scikit_build_core.build"
 
 [project]

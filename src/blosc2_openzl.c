@@ -7,8 +7,9 @@
 **********************************************************************/
 
 #include "blosc2_openzl.h"
+#include "blosc2_openzl_public.h"
 
-codec_info info = {
+BLOSC2_OPENZL_EXPORT codec_info info = {
     .encoder=(char *)"blosc2_openzl_encoder",
     .decoder=(char *)"blosc2_openzl_decoder"
 };
