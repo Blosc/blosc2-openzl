@@ -45,7 +45,7 @@ Tagging
 
     $ git push --delete origin vX.Y.Z
 
-- Create a new release visiting https://github.com/Blosc/blosc2_openzl/releases/new
+- Create a new release visiting https://github.com/Blosc/blosc2-openzl/releases/new
   and add the release notes copying them from `RELEASE_NOTES.md` document.
 
 
