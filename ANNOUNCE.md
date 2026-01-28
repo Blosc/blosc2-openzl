@@ -5,11 +5,11 @@ This is the initial release for this plugin.
 
 You can have a look at the release notes in:
 
-https://github.com/Blosc/blosc2_openzl/releases
+https://github.com/Blosc/blosc2-openzl/releases
 
 More info and examples are available in the README:
 
-https://github.com/Blosc/blosc2_openzl#readme
+https://github.com/Blosc/blosc2-openzl#readme
 
 ## What is it?
 
@@ -21,10 +21,10 @@ and decompress data using the OpenZL compression library.  For details, check ou
 
 The sources and documentation are managed through github services at:
 
-https://github.com/Blosc/blosc2_openzl
+https://github.com/Blosc/blosc2-openzl
 
-blosc2_grok is distributed using the AGPL license, see
-https://github.com/Blosc/blosc2_openzl/blob/main/LICENSE.txt
+blosc2-openzl is distributed using the AGPL license, see
+https://github.com/Blosc/blosc2-openzl/blob/main/LICENSE.txt
 for details.
 
 

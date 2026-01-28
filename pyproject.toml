@@ -12,7 +12,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "blosc2_openzl"
-version = "0.0.1.dev0"
+version = "0.0.1"
 readme = "README.md"
 authors = [
     {name = "Blosc Development Team", email = "contact@blosc.org"},
@@ -35,7 +35,7 @@ classifiers = [
 ]
 dependencies = [
     # python-blosc2 is not a strict runtime dependency, but it is handy
-    "blosc2"
+    "blosc2>=4.0.0.b1"
 ]
 
 [project.optional-dependencies]
