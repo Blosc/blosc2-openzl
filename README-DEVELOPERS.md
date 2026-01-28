@@ -8,7 +8,6 @@ For using blosc2_openzl you will first have to create and install its wheel.
 ```shell
 git clone https://github.com/Blosc/blosc2_openzl.git
 cd blosc2_openzl
-git submodule update --init
 ```
 
 ## Create the wheel
@@ -16,19 +15,19 @@ git submodule update --init
 For Linux:
 
 ```shell
-python -m cibuildwheel --only 'cp311-manylinux_x86_64'
+python -m cibuildwheel --only 'cp313-manylinux_x86_64'
 ```
 
 For Mac x86_64:
 
 ```shell
-CMAKE_OSX_ARCHITECTURES=x86_64 python -m cibuildwheel --only 'cp311-macosx_x86_64'
+CMAKE_OSX_ARCHITECTURES=x86_64 python -m cibuildwheel --only 'cp313-macosx_x86_64'
 ```
 
 For Mac arm64:
 
 ```shell
-CMAKE_OSX_ARCHITECTURES=arm64 python -m cibuildwheel --only 'cp311-macosx_arm64'
+CMAKE_OSX_ARCHITECTURES=arm64 python -m cibuildwheel --only 'cp313-macosx_arm64'
 ```
 
 ## Install the wheel
