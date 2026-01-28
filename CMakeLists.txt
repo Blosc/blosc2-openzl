@@ -9,6 +9,8 @@
 cmake_minimum_required(VERSION 3.20)
 project(blosc2_openzl LANGUAGES C CXX) # enable CXX just to get openzl to compile
 
+# Build statically
+set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_FIND_FRAMEWORK NEVER)
 
@@ -38,7 +40,7 @@ execute_process(
     RESULT_VARIABLE BLOSC2_IMPORT_RESULT
 )
 
-# To compile blosc2_openzl, we only need the include files
+# To compile blosc2_openzl, we only need the include files (although in the future may need to link with libblosc2)
 if(BLOSC2_IMPORT_RESULT EQUAL 0 AND EXISTS "${BLOSC2_PACKAGE_DIR}")
     message(STATUS "Found blosc2 package at: ${BLOSC2_PACKAGE_DIR}")
 

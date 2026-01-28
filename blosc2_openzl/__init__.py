@@ -46,6 +46,7 @@ def get_libpath():
     if system in "Linux":
         libname = "libblosc2_openzl.so"
     elif system == "Darwin":
+        # in future, on macOS may compile to .os (e.g. if blosc2 funcs added to blosc2_openzl.c)
         libname = "libblosc2_openzl.dylib"
     elif system == "Windows":
         libname = "blosc2_openzl.dll"

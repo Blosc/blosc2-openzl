@@ -145,7 +145,13 @@ set(OPENZL_TARGET openzl)
 add_library(blosc2_openzl SHARED blosc2_openzl.c)
 target_include_directories(blosc2_openzl PUBLIC ${BLOSC2_INCLUDE_DIR})
 # link to openzl (not to blosc2, since blosc2_openzl always called via blosc2 as plugin)
-target_link_libraries(blosc2_openzl PRIVATE ${OPENZL_TARGET}) 
+# target_link_libraries(blosc2_openzl ${OPENZL_TARGET}) 
+
+# if ever add blosc2 functions to blosc2_openzl, will need to link to blosc2 as well
+# ----- and so will need to uncomment these lines -------
+target_link_options(blosc2_openzl PRIVATE "-Wl,--enable-new-dtags") # need to force RUNPATH (not RPATH) for auditwheel repair by enabling new dtags
+target_link_libraries(blosc2_openzl ${OPENZL_TARGET} ${BLOSC2_LIBRARIES}) 
+
 
 # Add runtime path just in case (e.g. load plugin before blosc2 for example)
 # will not always be used, but if can't find blosc2 gives another thing to check
