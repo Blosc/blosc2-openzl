@@ -37,110 +37,110 @@ FetchContent_Declare(
 )
 
 
-# FetchContent_GetProperties(openzl)
-# if(NOT openzl_POPULATED)
-#     FetchContent_Populate(openzl)
-# endif()
+FetchContent_GetProperties(openzl)
+if(NOT openzl_POPULATED)
+    FetchContent_Populate(openzl)
+endif()
 
 # To use openzl native Cmake files, uncomment this
-FetchContent_MakeAvailable(openzl)
+# FetchContent_MakeAvailable(openzl)
 
 # Hard-code just compiling get C sources (basically copy-paste from OpenZL CMakelists.txt)
 # ========================================================================================
-# set(CMAKE_MODULE_PATH
-#     "${openzl_SOURCE_DIR}/build-scripts/cmake"
-#     # For in-fbsource release builds
-#     "${openzl_SOURCE_DIR}/../../opensource/fbcode_builder/CMake"
-#     # For in-fbsource dev builds
-#     "${openzl_SOURCE_DIR}/../../../opensource/fbcode_builder/CMake"
-#     # For shipit-transformed builds
-#     "${openzl_SOURCE_DIR}/build-scripts/fbcode_builder/CMake"
-#     ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH
+    "${openzl_SOURCE_DIR}/build-scripts/cmake"
+    # For in-fbsource release builds
+    "${openzl_SOURCE_DIR}/../../opensource/fbcode_builder/CMake"
+    # For in-fbsource dev builds
+    "${openzl_SOURCE_DIR}/../../../opensource/fbcode_builder/CMake"
+    # For shipit-transformed builds
+    "${openzl_SOURCE_DIR}/build-scripts/fbcode_builder/CMake"
+    ${CMAKE_MODULE_PATH})
 
-# if (WIN32 AND (MSVC OR
-#               (CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC") OR
-#               CMAKE_VS_PLATFORM_TOOLSET STREQUAL "ClangCL" OR
-#               CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL"))
-#     include(OpenZLCompilerMSVC)
-# else()
-#     include(OpenZLCompilerUnix)
-# endif()
-# include(OpenZLFunctions)
+if (WIN32 AND (MSVC OR
+              (CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC") OR
+              CMAKE_VS_PLATFORM_TOOLSET STREQUAL "ClangCL" OR
+              CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL"))
+    include(OpenZLCompilerMSVC)
+else()
+    include(OpenZLCompilerUnix)
+endif()
+include(OpenZLFunctions)
 
-# include(openzl-deps)
-# include(OpenZLConfigChecks)
+include(openzl-deps)
+include(OpenZLConfigChecks)
 
-# configure_file(
-#     ${openzl_SOURCE_DIR}/build-scripts/cmake/zl_config.h.cmake
-#     ${openzl_BINARY_DIR}/include/openzl/zl_config.h
-# )
-# set(CONFIG "${openzl_BINARY_DIR}/include/openzl/zl_config.h")
-# set(OPENZL_SRC_DIR  ${openzl_SOURCE_DIR}/src)
-# set(OPENZL_INCLUDE_DIR  ${openzl_SOURCE_DIR}/include)
+configure_file(
+    ${openzl_SOURCE_DIR}/build-scripts/cmake/zl_config.h.cmake
+    ${openzl_BINARY_DIR}/include/openzl/zl_config.h
+)
+set(CONFIG "${openzl_BINARY_DIR}/include/openzl/zl_config.h")
+set(OPENZL_SRC_DIR  ${openzl_SOURCE_DIR}/src)
+set(OPENZL_INCLUDE_DIR  ${openzl_SOURCE_DIR}/include)
 
-# file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${OPENZL_SRC_DIR}/*.c")
-# file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${OPENZL_SRC_DIR}/*.h")
-# file(GLOB_RECURSE public_headers CONFIGURE_DEPENDS "${OPENZL_INCLUDE_DIR}/*.h")
+file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${OPENZL_SRC_DIR}/*.c")
+file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${OPENZL_SRC_DIR}/*.h")
+file(GLOB_RECURSE public_headers CONFIGURE_DEPENDS "${OPENZL_INCLUDE_DIR}/*.h")
 
-# if (COMPILER_SUPPORT_AVX2 AND NOT MSVC)
-#     set_property(
-#         SOURCE
-#         ${OPENZL_SRC_DIR}/openzl/fse/decompress/huf_decompress_amd64.S
-#         APPEND PROPERTY COMPILE_OPTIONS "-x" "assembler-with-cpp"
-#     )
-#     list(APPEND sources ${OPENZL_SRC_DIR}/openzl/fse/decompress/huf_decompress_amd64.S)
-# endif()
+if (COMPILER_SUPPORT_AVX2 AND NOT MSVC)
+    set_property(
+        SOURCE
+        ${OPENZL_SRC_DIR}/openzl/fse/decompress/huf_decompress_amd64.S
+        APPEND PROPERTY COMPILE_OPTIONS "-x" "assembler-with-cpp"
+    )
+    list(APPEND sources ${OPENZL_SRC_DIR}/openzl/fse/decompress/huf_decompress_amd64.S)
+endif()
 
-# list(APPEND openzl_files
-#     ${sources}
-#     ${headers}
-# )
+list(APPEND openzl_files
+    ${sources}
+    ${headers}
+)
 
-# add_library(openzl
-#     ${openzl_files}
-#     "${CONFIG}")
+add_library(openzl
+    ${openzl_files}
+    "${CONFIG}")
 
-#     # We need PIC to build shared libraries. For now just enable it for all builds.
-# # Later we could build both PIC & non-PIC versions of the library.
-# set_property(TARGET openzl PROPERTY POSITION_INDEPENDENT_CODE ON)
+    # We need PIC to build shared libraries. For now just enable it for all builds.
+# Later we could build both PIC & non-PIC versions of the library.
+set_property(TARGET openzl PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-# source_group(
-#     TREE ${openzl_SOURCE_DIR}
-#     PREFIX "openzl"
-#     FILES ${sources} ${headers} ${public_headers})
-# source_group(
-#     TREE ${openzl_BINARY_DIR}
-#     PREFIX "openzl"
-#     FILES "${CONFIG}")
+source_group(
+    TREE ${openzl_SOURCE_DIR}
+    PREFIX "openzl"
+    FILES ${sources} ${headers} ${public_headers})
+source_group(
+    TREE ${openzl_BINARY_DIR}
+    PREFIX "openzl"
+    FILES "${CONFIG}")
 
-# target_include_directories(openzl_deps
-#     BEFORE
-#     INTERFACE
-#         $<BUILD_INTERFACE:${openzl_BINARY_DIR}/include>
-#         $<BUILD_INTERFACE:${openzl_SOURCE_DIR}>
-#         $<BUILD_INTERFACE:${openzl_SOURCE_DIR}/include>
-#         $<BUILD_INTERFACE:${openzl_SOURCE_DIR}/src>
-# )
+target_include_directories(openzl_deps
+    BEFORE
+    INTERFACE
+        $<BUILD_INTERFACE:${openzl_BINARY_DIR}/include>
+        $<BUILD_INTERFACE:${openzl_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${openzl_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${openzl_SOURCE_DIR}/src>
+)
 
-# target_include_directories(openzl_deps
-#     INTERFACE
-#         $<INSTALL_INTERFACE:include>
-# )
+target_include_directories(openzl_deps
+    INTERFACE
+        $<INSTALL_INTERFACE:include>
+)
 
-# target_include_directories(openzl
-#     PUBLIC
-#         $<TARGET_PROPERTY:openzl_deps,INTERFACE_INCLUDE_DIRECTORIES>
-# )
+target_include_directories(openzl
+    PUBLIC
+        $<TARGET_PROPERTY:openzl_deps,INTERFACE_INCLUDE_DIRECTORIES>
+)
 
-# target_include_directories(openzl
-#     PUBLIC
-#         $<TARGET_PROPERTY:openzl_deps,INTERFACE_COMPILE_DEFINITIONS>
-# )
+target_include_directories(openzl
+    PUBLIC
+        $<TARGET_PROPERTY:openzl_deps,INTERFACE_COMPILE_DEFINITIONS>
+)
 
-# set_property(TARGET openzl PROPERTY VERSION ${PACKAGE_VERSION})
-# apply_openzl_compile_options_to_target(openzl)
+set_property(TARGET openzl PROPERTY VERSION ${PACKAGE_VERSION})
+apply_openzl_compile_options_to_target(openzl)
 
-# target_link_libraries(openzl PUBLIC openzl_deps)
+target_link_libraries(openzl PUBLIC openzl_deps)
 # ============================================================ end copy-paste
 
 set(OPENZL_TARGET openzl)
